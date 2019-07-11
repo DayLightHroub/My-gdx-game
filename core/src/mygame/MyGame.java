@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Random;
 
 import mygame.objects.BasicEnemy;
+import mygame.objects.Extender;
 import mygame.objects.GameObject;
 import mygame.objects.Player;
 
@@ -22,7 +24,8 @@ public class MyGame extends ApplicationAdapter {
     public static final int WIDTH = 800, HEIGHT = 600;
     public static boolean isRunning;
     private int MIN_SPEED = 100;
-    //300 is the maximum speed!
+
+
     private int MAX_SPEED = 321 - MIN_SPEED;
 
     private float MIN_TIME_SPAWN_VALUE = 3;
@@ -57,6 +60,7 @@ public class MyGame extends ApplicationAdapter {
 
         mainPlayer = new Player();
         mainPlayer.setBounds(WIDTH / 2 - 16, 0, 32, 32);
+//        mainPlayer.setOrigin(Align.center);
 
         hud = new Hud(shapeRenderer);
 
@@ -85,6 +89,9 @@ public class MyGame extends ApplicationAdapter {
 //        delay = rn.nextFloat(MAX_TIME_SPAWN) + MIN_TIME_SPAWN_VALUE;
         delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
         System.out.println("first" + delay);
+
+
+
 
 
     }
@@ -132,6 +139,7 @@ public class MyGame extends ApplicationAdapter {
 
             //inside drawHUd shaperenderer.end() is called
             hud.draw(stage.getBatch());
+
 
         }
 
@@ -244,12 +252,26 @@ public class MyGame extends ApplicationAdapter {
                 MIN_TIME_SPAWN_VALUE = 4;
                 updateTimerValue(8);
                 mSpawnOE = false;
+
+                spawnOrange();
                 break;
 
 
         }
 
 
+    }
+
+    private void spawnOrange() {
+
+        //test
+        Extender extender = Pools.obtain(Extender.class);
+        extender.initiExtender();
+        extender.setBounds(300, 500, 16, 16);
+        extender.setVelX(0);
+        extender.setVelY(-150);
+        stage.addActor(extender);
+        //test
     }
 
     private void addObjectAtLevel() {

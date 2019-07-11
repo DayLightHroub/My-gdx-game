@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool;
 
+import mygame.MyGame;
+
 
 public class GameObject extends Actor implements Pool.Poolable {
 
@@ -14,8 +16,7 @@ public class GameObject extends Actor implements Pool.Poolable {
     protected Rectangle rectangle;
 
 
-    public static void setShapeRenderrer(ShapeRenderer renderer)
-    {
+    public static void setShapeRenderrer(ShapeRenderer renderer) {
         GameObject.renderer = renderer;
     }
 
@@ -30,7 +31,7 @@ public class GameObject extends Actor implements Pool.Poolable {
     }
 
     public void updateRect() {
-        rectangle.set(getX(), getY(), getWidth(), getHeight());
+        rectangle.set(getX(), getY(), getWidth() * getScaleX(), getHeight() * getScaleY());
 
     }
 
@@ -64,20 +65,15 @@ public class GameObject extends Actor implements Pool.Poolable {
         renderer.setColor(getColor());
         renderer.rect(getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 
-    }
 
-
-    @Override
-    public void setX(float x) {
-        super.setX(x);
-        rectangle.x = x;
     }
 
     @Override
-    public void setY(float y) {
-        super.setY(y);
-        rectangle.y = y;
+    public void act(float delta) {
+        super.act(delta);
+        updateRect();
     }
+
 
     @Override
     public void reset() {

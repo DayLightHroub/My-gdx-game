@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -89,9 +88,6 @@ public class MyGame extends ApplicationAdapter {
 //        delay = rn.nextFloat(MAX_TIME_SPAWN) + MIN_TIME_SPAWN_VALUE;
         delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
         System.out.println("first" + delay);
-
-
-
 
 
     }
@@ -252,9 +248,17 @@ public class MyGame extends ApplicationAdapter {
                 MIN_TIME_SPAWN_VALUE = 4;
                 updateTimerValue(8);
                 mSpawnOE = false;
-
                 spawnOrange();
+                MIN_SPEED = 321;
+                setMAX_SPEED(700);
                 break;
+
+
+            case 6000:
+                MIN_TIME_SPAWN_VALUE = 1;
+                updateTimerValue(3);
+
+
 
 
         }

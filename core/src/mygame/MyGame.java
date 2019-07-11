@@ -35,7 +35,7 @@ public class MyGame extends ApplicationAdapter {
     public static Player mainPlayer;
 
     private Random rn;
-    private int healthValue;
+    private int healthValue = 20;
 
 
     private boolean mSpawnOE = false;
@@ -90,7 +90,7 @@ public class MyGame extends ApplicationAdapter {
                         int delay = rn.nextInt(MAX_TIME_SLEEP) + MIN_TIME_SLEEP;
 //                        System.out.println("dleay timer is " + delay);
                         Thread.sleep(delay);
-                        while (isDrawing) ;
+                        while (isDrawing && isUpdating) ;
                         addObjectAtLevel();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -127,7 +127,9 @@ public class MyGame extends ApplicationAdapter {
 
 
             //update world
+            isUpdating = true;
             update(delta);
+            isUpdating = false;
 
 
             //draw shapes
@@ -138,6 +140,7 @@ public class MyGame extends ApplicationAdapter {
 
             //inside drawHUd shaperenderer.end() is called
             hud.draw(stage.getBatch());
+
         }
 
 
@@ -146,7 +149,7 @@ public class MyGame extends ApplicationAdapter {
     private void update(float delta) {
         stage.act(delta);
         mainPlayer.incScore();
-//        manageScoreLevel(Player.getScore());
+        manageScoreLevel(Player.getScore());
     }
 
     @Override
@@ -223,6 +226,7 @@ public class MyGame extends ApplicationAdapter {
 
             case 4800:
 
+                healthValue = 60;
                 mSpawnOE = true;
                 MIN_TIME_SLEEP = 100;
                 updateTimerValue(500);
@@ -264,7 +268,7 @@ public class MyGame extends ApplicationAdapter {
 
 
                 BasicEnemy healthPotion = Pools.obtain(BasicEnemy.class);
-                healthPotion.initEnemy(Color.GREEN, 1, 20);
+                healthPotion.initEnemy(Color.GREEN, 1, healthValue);
                 healthPotion.setBounds(rn.nextInt(WIDTH - 17), HEIGHT + 16, 16, 16);
                 healthPotion.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
                 stage.addActor(healthPotion);

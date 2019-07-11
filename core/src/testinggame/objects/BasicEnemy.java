@@ -52,7 +52,7 @@ public class BasicEnemy extends GameObject {
 
 
         if (Intersector.overlapConvexPolygons(MyGame.mainPlayer.getPoly(), getPoly())) {
-//            setY(MyGame.mainPlayer.getY() + MyGame.mainPlayer.getHeight());
+            setY(MyGame.mainPlayer.getY() + MyGame.mainPlayer.getHeight());
             setVelY(getVelY() * -6);
 
 //

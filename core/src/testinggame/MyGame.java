@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -15,8 +14,6 @@ import java.util.Random;
 
 import testinggame.objects.BasicEnemy;
 import testinggame.objects.Player;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 public class MyGame extends ApplicationAdapter {
 
@@ -43,6 +40,8 @@ public class MyGame extends ApplicationAdapter {
     private boolean mSpawnOE = false;
     private boolean spawnGreen = false;
     private boolean isDrawing = false;
+
+    private boolean isUpdating = false;
 
     @Override
     public void create() {
@@ -97,7 +96,7 @@ public class MyGame extends ApplicationAdapter {
                         int delay = rn.nextInt(MAX_TIME_SLEEP) + MIN_TIME_SLEEP;
 //                        System.out.println("dleay timer is " + delay);
                         Thread.sleep(delay);
-                        while (isDrawing) ;
+                        while (isDrawing && isUpdating) ;
                         addObjectAtLevel();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -106,9 +105,8 @@ public class MyGame extends ApplicationAdapter {
         }).start();
 
 
-
-        mainPlayer.rotateBy(45f);
-        mainPlayer.getPoly().rotate(45f);
+//        mainPlayer.rotateBy(45f);
+//        mainPlayer.getPoly().rotate(45f);
 
 
 //        addObjectAtLevel();
@@ -141,7 +139,9 @@ public class MyGame extends ApplicationAdapter {
 
 
         //update world
-            update(delta);
+        isUpdating = true;
+        update(delta);
+        isUpdating = false;
 
 
         //draw shapes

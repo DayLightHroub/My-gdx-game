@@ -55,7 +55,6 @@ public class BasicEnemy extends GameObject {
             setVelY(getVelY() * -6);
 
 
-
         }
     }
 

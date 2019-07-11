@@ -53,7 +53,8 @@ public class BasicEnemy extends GameObject {
             setY(MyGame.mainPlayer.getY() + MyGame.mainPlayer.getHeight());
             setVelY(getVelY() * -6);
 
-//
+
+
         }
     }
 

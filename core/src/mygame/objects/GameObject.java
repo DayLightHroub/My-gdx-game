@@ -1,28 +1,26 @@
 package mygame.objects;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Pool;
 
 
-public class GameObject extends Actor {
+public class GameObject extends Actor implements Pool.Poolable {
 
-    private final ShapeRenderer renderer;
-    protected GameObjectID id;
+    private static ShapeRenderer renderer;
     protected float velX, velY;
     protected Rectangle rectangle;
 
 
-    public GameObject(GameObjectID id, ShapeRenderer renderer, Color color) {
+    public static void setShapeRenderrer(ShapeRenderer renderer)
+    {
+        GameObject.renderer = renderer;
+    }
 
-        this.id = id;
-        this.renderer = renderer;
-        setColor(color);
-        rectangle =  new Rectangle();
-
-
+    public GameObject() {
+        rectangle = new Rectangle();
     }
 
     @Override
@@ -32,7 +30,7 @@ public class GameObject extends Actor {
     }
 
     public void updateRect() {
-     rectangle.set(getX(), getY(), getWidth(), getHeight());
+        rectangle.set(getX(), getY(), getWidth(), getHeight());
 
     }
 
@@ -79,5 +77,10 @@ public class GameObject extends Actor {
     public void setY(float y) {
         super.setY(y);
         rectangle.y = y;
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

@@ -1,8 +1,5 @@
 package mygame.objects;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
 import mygame.MyGame;
 
 
@@ -18,9 +15,9 @@ public class Player extends GameObject {
     private int ax;
 
 
-    public Player(ShapeRenderer renderer) {
+    public Player() {
 
-        super(GameObjectID.Player, renderer, Color.WHITE);
+
         animHealth = actualHealth = 100;
         score = 0;
         level = 1;
@@ -74,8 +71,8 @@ public class Player extends GameObject {
     public static int getScore() {
         return score;
     }
-    public void incScore()
-    {
+
+    public void incScore() {
         score++;
     }
 

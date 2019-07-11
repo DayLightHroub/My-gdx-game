@@ -6,19 +6,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Random;
 
 import mygame.objects.BasicEnemy;
+import mygame.objects.GameObject;
 import mygame.objects.Player;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 public class MyGame extends ApplicationAdapter {
 
@@ -38,13 +34,14 @@ public class MyGame extends ApplicationAdapter {
     private Hud hud;
     public static Player mainPlayer;
 
-    public static Pool<BasicEnemy> enemyPool;
     private Random rn;
+    private int healthValue;
 
 
     private boolean mSpawnOE = false;
     private boolean spawnGreen = false;
     private boolean isDrawing = false;
+    private boolean isUpdating = false;
 
     @Override
     public void create() {
@@ -54,7 +51,10 @@ public class MyGame extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
 
-        mainPlayer = new Player(shapeRenderer);
+        //inti shaperendrer in GameObject
+        GameObject.setShapeRenderrer(shapeRenderer);
+
+        mainPlayer = new Player();
         mainPlayer.setBounds(WIDTH / 2 - 16, 0, 32, 32);
 
         hud = new Hud(shapeRenderer);
@@ -77,15 +77,6 @@ public class MyGame extends ApplicationAdapter {
 //        hud.addAction(fadeOut(0));
 //        hud.addAction(sequence(parallel(fadeIn(0.15f), moveBy(0, 50f, 2f)),  scaleBy(2f, 0.3f, 0.5f)));
 
-        enemyPool = new Pool<BasicEnemy>() {
-            @Override
-            protected BasicEnemy newObject() {
-
-                return new BasicEnemy(shapeRenderer);
-
-            }
-        };
-
 
         addObjectAtLevel();
 
@@ -99,28 +90,13 @@ public class MyGame extends ApplicationAdapter {
                         int delay = rn.nextInt(MAX_TIME_SLEEP) + MIN_TIME_SLEEP;
 //                        System.out.println("dleay timer is " + delay);
                         Thread.sleep(delay);
-                        while(isDrawing);
+                        while (isDrawing) ;
                         addObjectAtLevel();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
             }
         }).start();
-
-
-
-        Action update = new Action(){
-            @Override
-            public boolean act(float delta){
-                mainPlayer.updateRect();
-                mainPlayer.updatePlayerBounds();
-                return true;
-            }
-        };
-        mainPlayer.addAction(sequence(Actions.rotateBy(32f, 2f), update));
-
-
-//        addObjectAtLevel();
 
 
     }
@@ -132,7 +108,7 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if(Player.getActualHealth() != 0) {
+        if (Player.getActualHealth() != 0) {
 
 
             float delta = Gdx.graphics.getDeltaTime();
@@ -269,7 +245,7 @@ public class MyGame extends ApplicationAdapter {
     private void addObjectAtLevel() {
 
         int xLocation = rn.nextInt(WIDTH - 17);
-        BasicEnemy be = enemyPool.obtain();
+        BasicEnemy be = Pools.obtain(BasicEnemy.class);
         be.setBounds(xLocation, HEIGHT + 16, 16, 16);
         be.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
 
@@ -287,7 +263,7 @@ public class MyGame extends ApplicationAdapter {
             if (rn.nextBoolean()) {
 
 
-                BasicEnemy healthPotion = enemyPool.obtain();
+                BasicEnemy healthPotion = Pools.obtain(BasicEnemy.class);
                 healthPotion.initEnemy(Color.GREEN, 1, 20);
                 healthPotion.setBounds(rn.nextInt(WIDTH - 17), HEIGHT + 16, 16, 16);
                 healthPotion.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
@@ -323,8 +299,7 @@ public class MyGame extends ApplicationAdapter {
         MAX_TIME_SLEEP = value + 1 - MIN_TIME_SLEEP;
     }
 
-    private void setMAX_SPEED(int val)
-    {
+    private void setMAX_SPEED(int val) {
         MAX_SPEED = val - MIN_SPEED;
     }
 }

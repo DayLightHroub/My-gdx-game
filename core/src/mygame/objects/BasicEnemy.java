@@ -2,7 +2,7 @@
 package mygame.objects;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Pools;
 
 import mygame.MyGame;
 import mygame.constants.Constants;
@@ -10,24 +10,14 @@ import mygame.constants.Constants;
 public class BasicEnemy extends GameObject {
 
 
-//    public BasicEnemy(int x, int y, int width, int height,int speed,  GameObjectID id) {
-//        super(x, y, width, height, id);
-//        setVelY(speed);
-//    }
-
     private int damage;
     private int healthUpValue;
-
-    public BasicEnemy(ShapeRenderer renderer) {
-        super(GameObjectID.Enemy, renderer, Color.RED);
-        damage = 8;
-        healthUpValue = 4;
-    }
 
     public void initEnemy(Color color, int damage, int healthUpValue) {
         setColor(color);
         this.damage = damage;
         this.healthUpValue = healthUpValue;
+
     }
 
     @Override
@@ -61,7 +51,7 @@ public class BasicEnemy extends GameObject {
 
     private void killObject() {
         remove();
-        MyGame.enemyPool.free(this);
+        Pools.free(this);
         System.out.println("killed");
     }
 

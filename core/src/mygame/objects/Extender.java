@@ -1,15 +1,12 @@
 package mygame.objects;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+
+import com.badlogic.gdx.utils.Pools;
 
 import mygame.MyGame;
 
 public class Extender extends GameObject {
-
-    public Extender(GameObjectID id, ShapeRenderer renderer, Color color) {
-        super(id, renderer, color);
-    }
 
     @Override
     public void act(float delta) {
@@ -31,7 +28,7 @@ public class Extender extends GameObject {
 
     private void killObject() {
         remove();
-        MyGame.enemyPool.free(this);
+        Pools.free(this);
         System.out.println("killed");
     }
 }

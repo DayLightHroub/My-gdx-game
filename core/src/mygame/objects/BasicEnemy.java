@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import mygame.MyGame;
+import mygame.constants.Constants;
 
 public class BasicEnemy extends GameObject {
 
@@ -52,7 +53,7 @@ public class BasicEnemy extends GameObject {
 
         if (getRectangle().overlaps(MyGame.mainPlayer.getRectangle())) {
             setY(MyGame.mainPlayer.getY() + MyGame.mainPlayer.getHeight());
-            setVelY(getVelY() * -6);
+            setVelY(Constants.MAX_SPEED_ENEMY);
 
 
         }

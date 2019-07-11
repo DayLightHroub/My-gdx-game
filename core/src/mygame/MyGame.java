@@ -42,6 +42,9 @@ public class MyGame extends ApplicationAdapter {
     private Random rn;
 
 
+
+    private int healthValue = 30;
+
     private boolean mSpawnOE = false;
     private boolean spawnGreen = false;
     private boolean isDrawing = false;
@@ -109,19 +112,6 @@ public class MyGame extends ApplicationAdapter {
 
 
 
-        Action update = new Action(){
-            @Override
-            public boolean act(float delta){
-                mainPlayer.updateRect();
-                mainPlayer.updatePlayerBounds();
-                return true;
-            }
-        };
-        mainPlayer.addAction(sequence(Actions.rotateBy(32f, 2f), update));
-
-
-//        addObjectAtLevel();
-
 
     }
 
@@ -170,7 +160,7 @@ public class MyGame extends ApplicationAdapter {
     private void update(float delta) {
         stage.act(delta);
         mainPlayer.incScore();
-//        manageScoreLevel(Player.getScore());
+        manageScoreLevel(Player.getScore());
     }
 
     @Override
@@ -247,6 +237,7 @@ public class MyGame extends ApplicationAdapter {
 
             case 4800:
 
+                healthValue = 60;
                 mSpawnOE = true;
                 MIN_TIME_SLEEP = 100;
                 updateTimerValue(500);
@@ -288,7 +279,7 @@ public class MyGame extends ApplicationAdapter {
 
 
                 BasicEnemy healthPotion = enemyPool.obtain();
-                healthPotion.initEnemy(Color.GREEN, 1, 20);
+                healthPotion.initEnemy(Color.GREEN, 1, healthValue);
                 healthPotion.setBounds(rn.nextInt(WIDTH - 17), HEIGHT + 16, 16, 16);
                 healthPotion.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
                 stage.addActor(healthPotion);

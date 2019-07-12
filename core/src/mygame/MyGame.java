@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.Random;
 
 import mygame.objects.BasicEnemy;
+import mygame.objects.Extender;
 import mygame.objects.GameObject;
 import mygame.objects.Player;
 
@@ -21,12 +23,12 @@ public class MyGame extends ApplicationAdapter {
     public static final int WIDTH = 800, HEIGHT = 600;
     public static boolean isRunning;
     private int MIN_SPEED = 100;
-    //300 is the maximum speed!
+
+
     private int MAX_SPEED = 321 - MIN_SPEED;
 
-    private int MIN_TIME_SLEEP = 3000;
-    private int MAX_TIME_VALUE = 7000;
-    private int MAX_TIME_SLEEP = MAX_TIME_VALUE + 1 - MIN_TIME_SLEEP;
+    private float MIN_TIME_SPAWN_VALUE = 3;
+    private float MAX_TIME_SPAWN_VALUE = 7;
 
 
     private Stage stage;
@@ -40,8 +42,9 @@ public class MyGame extends ApplicationAdapter {
 
     private boolean mSpawnOE = false;
     private boolean spawnGreen = false;
-    private boolean isDrawing = false;
-    private boolean isUpdating = false;
+
+
+    float delay;
 
     @Override
     public void create() {
@@ -56,6 +59,7 @@ public class MyGame extends ApplicationAdapter {
 
         mainPlayer = new Player();
         mainPlayer.setBounds(WIDTH / 2 - 16, 0, 32, 32);
+//        mainPlayer.setOrigin(Align.center);
 
         hud = new Hud(shapeRenderer);
 
@@ -81,25 +85,15 @@ public class MyGame extends ApplicationAdapter {
         addObjectAtLevel();
 
 
-        //Enemy spawn thread
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true)
-                    try {
-                        int delay = rn.nextInt(MAX_TIME_SLEEP) + MIN_TIME_SLEEP;
-//                        System.out.println("dleay timer is " + delay);
-                        Thread.sleep(delay);
-                        while (isDrawing && isUpdating) ;
-                        addObjectAtLevel();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-            }
-        }).start();
+//        delay = rn.nextFloat(MAX_TIME_SPAWN) + MIN_TIME_SPAWN_VALUE;
+        delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
+        System.out.println("first" + delay);
 
 
     }
+
+
+    private float time = 0.0f;
 
     public void resize(int width, int height) {
         // See below for what true means.
@@ -112,6 +106,8 @@ public class MyGame extends ApplicationAdapter {
 
 
             float delta = Gdx.graphics.getDeltaTime();
+
+//            System.out.println(time += delta);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             //handlerObjects.tick(delta);
             //hud.tick(delta)
@@ -127,19 +123,19 @@ public class MyGame extends ApplicationAdapter {
 
 
             //update world
-            isUpdating = true;
+
             update(delta);
-            isUpdating = false;
 
 
             //draw shapes
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            isDrawing = true;
+
             stage.draw();
-            isDrawing = false;
+
 
             //inside drawHUd shaperenderer.end() is called
             hud.draw(stage.getBatch());
+
 
         }
 
@@ -149,6 +145,20 @@ public class MyGame extends ApplicationAdapter {
     private void update(float delta) {
         stage.act(delta);
         mainPlayer.incScore();
+
+
+        //add a new object (enemy, healthpotion, extender) when timer is finished
+
+        time += delta;
+        if (time > delay) {
+
+            delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
+            System.out.println("new delay : " + delay);
+            time = 0;
+            addObjectAtLevel();
+        }
+
+
         manageScoreLevel(Player.getScore());
     }
 
@@ -165,33 +175,33 @@ public class MyGame extends ApplicationAdapter {
 //
         switch (score) {
             case 100:
-                updateTimerValue(6000);
+                updateTimerValue(6);
                 break;
             case 600:
-                updateTimerValue(5500);
+                updateTimerValue(5.5f);
                 break;
             case 700:
 
-                updateTimerValue(4500);
+                updateTimerValue(4.5f);
                 break;
             case 1200:
-                updateTimerValue(3500);
+                updateTimerValue(3.5f);
                 break;
             case 1500:
-                MIN_TIME_SLEEP = 1500;
-                updateTimerValue(3500);
+                MIN_TIME_SPAWN_VALUE = 1.5f;
+                updateTimerValue(3.5f);
 
                 break;
             case 1700:
-                updateTimerValue(2500);
+                updateTimerValue(2.5f);
                 break;
             case 1900:
-                updateTimerValue(1750);
+                updateTimerValue(1.75f);
                 break;
             case 2200:
 
-                MIN_TIME_SLEEP = 500;
-                updateTimerValue(1000);
+                MIN_TIME_SPAWN_VALUE = .5f;
+                updateTimerValue(1f);
 
 
                 break;
@@ -200,50 +210,72 @@ public class MyGame extends ApplicationAdapter {
 
             case 2900:
 
-                MIN_TIME_SLEEP = 100;
-                updateTimerValue(300);
+                MIN_TIME_SPAWN_VALUE = .1f;
+                updateTimerValue(.3f);
                 spawnGreen = true;
                 break;
             case 3200:
                 spawnGreen = false;
                 setMAX_SPEED(421);
-                MIN_TIME_SLEEP = 4000;
-                updateTimerValue(6000);
+                MIN_TIME_SPAWN_VALUE = 4;
+                updateTimerValue(6);
                 mSpawnOE = true;
                 break;
 
             case 3400:
-                MIN_TIME_SLEEP = 2000;
-                updateTimerValue(4000);
+                MIN_TIME_SPAWN_VALUE = 2;
+                updateTimerValue(4);
 
                 break;
 
             case 4200:
-                MIN_TIME_SLEEP = 500;
-                updateTimerValue(1000);
+                MIN_TIME_SPAWN_VALUE = .5f;
+                updateTimerValue(1);
 
                 break;
 
-            case 4800:
+            case 5200:
 
                 healthValue = 60;
                 mSpawnOE = true;
-                MIN_TIME_SLEEP = 100;
-                updateTimerValue(500);
+                MIN_TIME_SPAWN_VALUE = .1f;
+                updateTimerValue(.5f);
                 spawnGreen = true;
                 break;
 
-            case 5500:
+            case 5700:
                 spawnGreen = false;
-                MIN_TIME_SLEEP = 4000;
-                updateTimerValue(8000);
+                MIN_TIME_SPAWN_VALUE = 4;
+                updateTimerValue(8);
                 mSpawnOE = false;
+                spawnOrange();
+                MIN_SPEED = 321;
+                setMAX_SPEED(700);
                 break;
+
+
+            case 6000:
+                MIN_TIME_SPAWN_VALUE = 1;
+                updateTimerValue(3);
+
+
 
 
         }
 
 
+    }
+
+    private void spawnOrange() {
+
+        //test
+        Extender extender = Pools.obtain(Extender.class);
+        extender.initiExtender();
+        extender.setBounds(300, 500, 16, 16);
+        extender.setVelX(0);
+        extender.setVelY(-150);
+        stage.addActor(extender);
+        //test
     }
 
     private void addObjectAtLevel() {
@@ -299,8 +331,8 @@ public class MyGame extends ApplicationAdapter {
 //    }
 
 
-    private void updateTimerValue(int value) {
-        MAX_TIME_SLEEP = value + 1 - MIN_TIME_SLEEP;
+    private void updateTimerValue(float value) {
+        MAX_TIME_SPAWN_VALUE = value;
     }
 
     private void setMAX_SPEED(int val) {

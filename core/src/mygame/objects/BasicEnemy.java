@@ -2,9 +2,9 @@
 package mygame.objects;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Pools;
 
 import mygame.MyGame;
+import mygame.common.KillObject;
 import mygame.constants.Constants;
 
 public class BasicEnemy extends GameObject {
@@ -23,36 +23,32 @@ public class BasicEnemy extends GameObject {
     @Override
     public void act(float delta) {
 
-        super.act(delta);
+
         setY(getY() + getVelY() * delta);
         if (getY() < 0 - getHeight()) {
             Player.setHealth(Player.getActualHealth() - damage);
-            killObject();
+            KillObject.killObject(this);
 //            System.out.println("HEALTH KILLED");
 
         } else if (getY() > MyGame.HEIGHT + getHeight() + 20) {
-            killObject();
+            KillObject.killObject(this);
             Player.setHealth(Player.getActualHealth() + healthUpValue);
 //            System.out.println("BOUNDS KILLED");
-        } else {
-            checkCollision();
         }
+
+        super.act(delta);
+        checkCollision();
+
     }
 
     private void checkCollision() {
 
         if (getRectangle().overlaps(MyGame.mainPlayer.getRectangle())) {
-            setY(MyGame.mainPlayer.getY() + MyGame.mainPlayer.getHeight());
+            setY(MyGame.mainPlayer.getY() + MyGame.mainPlayer.getHeight() * MyGame.mainPlayer.getScaleY());
             setVelY(Constants.MAX_SPEED_ENEMY);
 
 
         }
-    }
-
-    private void killObject() {
-        remove();
-        Pools.free(this);
-        System.out.println("killed");
     }
 
 }

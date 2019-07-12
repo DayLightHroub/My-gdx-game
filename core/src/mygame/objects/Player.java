@@ -1,5 +1,8 @@
 package mygame.objects;
 
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+
 import mygame.MyGame;
 
 
@@ -11,8 +14,6 @@ public class Player extends GameObject {
     private static int score;
     private static int level;
     private static int PLAYER_SPEED = 600;
-
-    private int ax;
 
 
     public Player() {
@@ -40,9 +41,8 @@ public class Player extends GameObject {
 
     @Override
     public void act(float delta) {
+        setX(MyGame.clamp(getX() + velX * delta, 0, MyGame.WIDTH - getWidth() * getScaleX()));
         super.act(delta);
-        setX(getX() + velX * delta);
-        setX(MyGame.clamp(getX(), 0, playerBounds));
 
 
     }
@@ -64,7 +64,7 @@ public class Player extends GameObject {
         } else if (Player.actualHealth > 100)
             Player.actualHealth = 100;
 
-        System.out.println("new health is " + actualHealth);
+//        System.out.println("new health is " + actualHealth);
 
     }
 
@@ -136,4 +136,11 @@ public class Player extends GameObject {
     public static int getPlayerSpeed() {
         return PLAYER_SPEED;
     }
+
+    public void extend() {
+
+        addAction(Actions.scaleTo(2, 1, 0.5f, Interpolation.swingIn));
+    }
+
+
 }

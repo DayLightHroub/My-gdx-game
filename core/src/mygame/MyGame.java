@@ -257,6 +257,7 @@ public class MyGame extends ApplicationAdapter {
             case 6000:
                 MIN_TIME_SPAWN_VALUE = 1;
                 updateTimerValue(3);
+                //testLine
 
 
 

@@ -1,5 +1,6 @@
 package mygame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,9 +24,6 @@ public class Hud {
     }
 
 
-
-
-
     public void draw(Batch batch) {
 
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
@@ -47,11 +45,11 @@ public class Hud {
 
     }
 
+
     public void drawText(Batch batch) {
 
         batch.begin();
         font.draw(batch, "Score: " + Player.getScore(), xText, yText);
-
         batch.end();
     }
 

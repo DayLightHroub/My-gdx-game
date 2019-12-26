@@ -1,21 +1,19 @@
 package mygame.common;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
-
-import mygame.objects.GameObject;
 
 public class KillObject {
 
 
-    private KillObject()
-    {
+    private KillObject() {
 
     }
 
-    public static void killObject(GameObject object) {
-        object.remove();
+    public static void killObject(Pool.Poolable object) {
+        ((Actor) object).remove();
         Pools.free(object);
-        System.out.println("killed");
 
     }
 }

@@ -68,26 +68,8 @@ public class MyGame extends ApplicationAdapter {
 //        actor.setOriginY(actor.getHeight() / 2);
 //        actor.setOrigin(Align.center);
         stage.addActor(mainPlayer);
-
-//        stage.setKeyboardFocus(actor);
-
-
-//        actor.addAction(scaleTo(5, 1, 3f));
-//        myActor.addAction(parallel(moveTo(250, 250, 2, bounceOut), color(Color.RED, 6), delay(0.5f), rotateTo(180, 5, swing)));
-//        actor.addAction(forever(sequence(sizeTo(35, 35, 0.2f), sizeTo(32, 32, 0.5f), delay(0.2f))));
-//        actor.addAction(forever(sequence(scaleBy(0.3f, 0.3f, 0.4f), scaleBy(-0.3f, -0.3f, 0.4f), delay(0.3f))));
-
-
-//        hud.addAction(fadeOut(0));
-//        hud.addAction(sequence(parallel(fadeIn(0.15f), moveBy(0, 50f, 2f)),  scaleBy(2f, 0.3f, 0.5f)));
-
-
         addObjectAtLevel();
-
-
-//        delay = rn.nextFloat(MAX_TIME_SPAWN) + MIN_TIME_SPAWN_VALUE;
         delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
-        System.out.println("first" + delay);
 
 
     }
@@ -153,7 +135,6 @@ public class MyGame extends ApplicationAdapter {
         if (time > delay) {
 
             delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
-            System.out.println("new delay : " + delay);
             time = 0;
             addObjectAtLevel();
         }
@@ -260,8 +241,6 @@ public class MyGame extends ApplicationAdapter {
                 //testLine
 
 
-
-
         }
 
 
@@ -288,9 +267,9 @@ public class MyGame extends ApplicationAdapter {
 
 
         if (mSpawnOE && rn.nextBoolean())
-            be.initEnemy(new Color(0.63921f, 0, 0, 1f), 20, 7);
+            be.initEnemy(new Color(0.63921f, 0, 0, 1f), 20, 7, stage);
         else
-            be.initEnemy(Color.RED, 8, 4);
+            be.initEnemy(Color.RED, 8, 4, stage);
 
         stage.addActor(be);
 //
@@ -301,7 +280,7 @@ public class MyGame extends ApplicationAdapter {
 
 
                 BasicEnemy healthPotion = Pools.obtain(BasicEnemy.class);
-                healthPotion.initEnemy(Color.GREEN, 1, healthValue);
+                healthPotion.initEnemy(Color.GREEN, 1, healthValue, stage);
                 healthPotion.setBounds(rn.nextInt(WIDTH - 17), HEIGHT + 16, 16, 16);
                 healthPotion.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
                 stage.addActor(healthPotion);

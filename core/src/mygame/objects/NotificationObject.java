@@ -6,14 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Timer;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mygame.common.KillObject;
 
 //TODO Remove actor class and replace with something else.
+//TODO don't use BitMapFont...., replace with smoother font.
 
 /**
  * This class is used to display a popup text on the screen with some animations to describe a message
@@ -83,7 +85,8 @@ public class NotificationObject extends Actor implements Pool.Poolable {
 
 
         //after this the defined amount of time remove this object.
-        Timer.schedule(new Timer.Task() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 animationCalculations.add(new Runnable() {
@@ -98,7 +101,7 @@ public class NotificationObject extends Actor implements Pool.Poolable {
                     }
                 });
             }
-        }, 2.5f);
+        }, 2500);
     }
 
 

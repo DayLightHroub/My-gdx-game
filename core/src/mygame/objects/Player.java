@@ -13,7 +13,6 @@ public class Player extends GameObject {
     private static int actualHealth;
     private static int score;
     private static int level;
-    private static int PLAYER_SPEED = 600;
 
 
     public Player() {
@@ -64,8 +63,6 @@ public class Player extends GameObject {
         } else if (Player.actualHealth > 100)
             Player.actualHealth = 100;
 
-//        System.out.println("new health is " + actualHealth);
-
     }
 
     public static int getScore() {
@@ -84,57 +81,8 @@ public class Player extends GameObject {
         return actualHealth;
     }
 
-    public static int getLevel() {
-        return level;
-    }
-
-
-    public void setVelXNew(int ax, float delta) {
-
-
-        if (ax > 0) {
-            if (velX < 0)
-                velX += 3800 * delta;
-            else {
-                velX += ax * delta;
-                if (velX > PLAYER_SPEED) {
-                    velX = PLAYER_SPEED;
-                }
-            }
-
-        } else {
-            if (velX > 0)
-                velX -= 3800 * delta;
-            else {
-                velX += ax * delta;
-                if (velX < -PLAYER_SPEED) {
-                    velX += ax * delta;
-                    velX = -PLAYER_SPEED;
-                }
-            }
-        }
-
-//        System.out.println(velX);
-    }
-
-    public void stop(float delta) {
-        if (velX > 0) {
-            velX -= 3800 * delta;
-            if (velX < 0) velX = 0;
-        } else {
-            velX += 3800 * delta;
-            if (velX > 0) velX = 0;
-        }
-
-
-    }
-
     public void stop() {
         velX = 0;
-    }
-
-    public static int getPlayerSpeed() {
-        return PLAYER_SPEED;
     }
 
     public void extend() {

@@ -7,29 +7,31 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Random;
 
-import mygame.objects.BasicEnemy;
+import mygame.common.KillObject;
 import mygame.objects.Extender;
 import mygame.objects.GameObject;
 import mygame.objects.Player;
+import mygame.objects.enemies.CircularEnemy;
+import mygame.objects.enemies.LevelOneEnemy;
+import mygame.objects.enemies.SmartEnemy;
+import mygame.objects.enemies.SpiralEnemy;
 
 public class MyGame extends ApplicationAdapter {
 
     public static final int WIDTH = 800, HEIGHT = 600;
-    public static boolean isRunning;
-    private int MIN_SPEED = 100;
+    private int minSpeed = 100;
+    private int maxSpeed = 321 - minSpeed;
 
-
-    private int MAX_SPEED = 321 - MIN_SPEED;
-
-    private float MIN_TIME_SPAWN_VALUE = 3;
-    private float MAX_TIME_SPAWN_VALUE = 7;
-
+    private float minTimeSpawnValue = 3;
+    private float maxTimeSpawnValue = 7;
 
     private Stage stage;
     private ShapeRenderer shapeRenderer;
@@ -39,12 +41,14 @@ public class MyGame extends ApplicationAdapter {
     private Random rn;
     private int healthValue = 20;
 
-
     private boolean mSpawnOE = false;
     private boolean spawnGreen = false;
 
-
+    private float time = 0.0f;
     float delay;
+
+    //will determine if we are in pause state or not
+    private boolean isPaused;
 
     @Override
     public void create() {
@@ -63,19 +67,28 @@ public class MyGame extends ApplicationAdapter {
 
         hud = new Hud(shapeRenderer);
 
-
-//        actor.setOriginX(actor.getWidth() / 2);
-//        actor.setOriginY(actor.getHeight() / 2);
-//        actor.setOrigin(Align.center);
         stage.addActor(mainPlayer);
-        addObjectAtLevel();
-        delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
+        processObjects.run();
+        delay = MathUtils.random(minTimeSpawnValue, maxTimeSpawnValue);
 
+
+//        CircularEnemy circularEnemy = new CircularEnemy();
+//        circularEnemy.init(2, 2, stage);
+//        stage.addActor(circularEnemy);
+
+
+        SmartEnemy smartEnemy = new SmartEnemy();
+        smartEnemy.init(2, 2, stage);
+        smartEnemy.setX(WIDTH/2);
+        smartEnemy.setVelY(-10);
+        smartEnemy.setWidth(15);
+        smartEnemy.setHeight(15);
+        smartEnemy.setY(HEIGHT - 30);
+        stage.addActor(smartEnemy);
+//        Player.setScore(6900);
 
     }
 
-
-    private float time = 0.0f;
 
     public void resize(int width, int height) {
         // See below for what true means.
@@ -84,59 +97,90 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if (Player.getActualHealth() != 0) {
+        //change pause state.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P))
+            isPaused = !isPaused;
+        if (!isPaused) {
+            if (Player.getActualHealth() != 0) {
+                float delta = Gdx.graphics.getDeltaTime();
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+                if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    mainPlayer.setVelX(500);
+                } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    // System.out.println("pressing A");
+                    mainPlayer.setVelX(-500);
+                } else
+                    mainPlayer.stop();
 
 
-            float delta = Gdx.graphics.getDeltaTime();
+                //update world
 
-//            System.out.println(time += delta);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            //handlerObjects.tick(delta);
-            //hud.tick(delta)
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                // System.out.println("pressing D");
-                mainPlayer.setVelX(500);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                // System.out.println("pressing A");
-                mainPlayer.setVelX(-500);
+                update(delta);
+
+
+                //draw shapes
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+                stage.draw();
+
+
+                //inside drawHUd shaperenderer.end() is called
+                hud.draw(stage.getBatch());
+
+
             } else
-                mainPlayer.stop();
-//            mainPlayer.setVelX(-500);
-
-
-            //update world
-
-            update(delta);
-
-
-            //draw shapes
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-            stage.draw();
-
-
-            //inside drawHUd shaperenderer.end() is called
-            hud.draw(stage.getBatch());
-
-
+                reset();
         }
 
 
+    }
+
+    /**
+     * Reset game, will set every varaibles back to default.
+     */
+    private void reset() {
+        Player.setHealth(100);
+        Player.setScore(0);
+        mainPlayer.setBounds(WIDTH / 2 - 16, 0, 32, 32);
+        mainPlayer.setScale(1);
+        minSpeed = 100;
+        maxSpeed = 321 - minSpeed;
+
+        minTimeSpawnValue = 3;
+        maxTimeSpawnValue = 7;
+
+        healthValue = 20;
+
+        mSpawnOE = false;
+        spawnGreen = false;
+        time = 0;
+
+        delay = MathUtils.random(minTimeSpawnValue, maxTimeSpawnValue);
+        processObjects = new Runnable() {
+            @Override
+            public void run() {
+                addObjectAtLevel();
+            }
+        };
+
+        //kill all objects
+        for (Actor actor : stage.getActors()) {
+            if (actor.equals(mainPlayer))
+                continue;
+            KillObject.killObject((Pool.Poolable) actor);
+        }
     }
 
     private void update(float delta) {
         stage.act(delta);
         mainPlayer.incScore();
 
-
-        //add a new object (enemy, healthpotion, extender) when timer is finished
-
         time += delta;
         if (time > delay) {
 
-            delay = MathUtils.random(MIN_TIME_SPAWN_VALUE, MAX_TIME_SPAWN_VALUE);
+            delay = MathUtils.random(minTimeSpawnValue, maxTimeSpawnValue);
             time = 0;
-            addObjectAtLevel();
+            processObjects.run();
         }
 
 
@@ -152,8 +196,6 @@ public class MyGame extends ApplicationAdapter {
 
     private void manageScoreLevel(int score) {
 
-
-//
         switch (score) {
             case 100:
                 updateTimerValue(6);
@@ -169,7 +211,7 @@ public class MyGame extends ApplicationAdapter {
                 updateTimerValue(3.5f);
                 break;
             case 1500:
-                MIN_TIME_SPAWN_VALUE = 1.5f;
+                minTimeSpawnValue = 1.5f;
                 updateTimerValue(3.5f);
 
                 break;
@@ -180,67 +222,59 @@ public class MyGame extends ApplicationAdapter {
                 updateTimerValue(1.75f);
                 break;
             case 2200:
-
-                MIN_TIME_SPAWN_VALUE = .5f;
+                minTimeSpawnValue = .5f;
                 updateTimerValue(1f);
-
-
                 break;
             case 2400:
-
-
             case 2900:
-
-                MIN_TIME_SPAWN_VALUE = .1f;
+                minTimeSpawnValue = .1f;
                 updateTimerValue(.3f);
                 spawnGreen = true;
                 break;
             case 3200:
                 spawnGreen = false;
-                setMAX_SPEED(421);
-                MIN_TIME_SPAWN_VALUE = 4;
+                setMaxSpeed(421);
+                minTimeSpawnValue = 4;
                 updateTimerValue(6);
                 mSpawnOE = true;
                 break;
-
             case 3400:
-                MIN_TIME_SPAWN_VALUE = 2;
+                minTimeSpawnValue = 2;
                 updateTimerValue(4);
-
                 break;
-
             case 4200:
-                MIN_TIME_SPAWN_VALUE = .5f;
+                minTimeSpawnValue = .5f;
                 updateTimerValue(1);
-
                 break;
-
             case 5200:
-
                 healthValue = 60;
                 mSpawnOE = true;
-                MIN_TIME_SPAWN_VALUE = .1f;
+                minTimeSpawnValue = .1f;
                 updateTimerValue(.5f);
                 spawnGreen = true;
                 break;
-
             case 5700:
                 spawnGreen = false;
-                MIN_TIME_SPAWN_VALUE = 4;
+                minTimeSpawnValue = 4;
                 updateTimerValue(8);
                 mSpawnOE = false;
                 spawnOrange();
-                MIN_SPEED = 321;
-                setMAX_SPEED(700);
+                minSpeed = 321;
+                setMaxSpeed(700);
                 break;
-
-
             case 6000:
-                MIN_TIME_SPAWN_VALUE = 1;
+                minTimeSpawnValue = 1;
                 updateTimerValue(3);
-                //testLine
-
-
+                break;
+            case 7000:
+                updateTimerValue(0.6f);
+                processObjects = new Runnable() {
+                    @Override
+                    public void run() {
+                        spiriallEnemySpwaner();
+                    }
+                };
+                break;
         }
 
 
@@ -258,12 +292,22 @@ public class MyGame extends ApplicationAdapter {
         //test
     }
 
+    private Runnable processObjects = new Runnable() {
+        @Override
+        public void run() {
+            addObjectAtLevel();
+        }
+    };
+
+    /**
+     * Add an object for started levels
+     */
     private void addObjectAtLevel() {
 
         int xLocation = rn.nextInt(WIDTH - 17);
-        BasicEnemy be = Pools.obtain(BasicEnemy.class);
+        LevelOneEnemy be = Pools.obtain(LevelOneEnemy.class);
         be.setBounds(xLocation, HEIGHT + 16, 16, 16);
-        be.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
+        be.setVelY(-(rn.nextInt(maxSpeed) + minSpeed));
 
 
         if (mSpawnOE && rn.nextBoolean())
@@ -279,17 +323,31 @@ public class MyGame extends ApplicationAdapter {
             if (rn.nextBoolean()) {
 
 
-                BasicEnemy healthPotion = Pools.obtain(BasicEnemy.class);
+                LevelOneEnemy healthPotion = Pools.obtain(LevelOneEnemy.class);
                 healthPotion.initEnemy(Color.GREEN, 1, healthValue, stage);
                 healthPotion.setBounds(rn.nextInt(WIDTH - 17), HEIGHT + 16, 16, 16);
-                healthPotion.setVelY(-(rn.nextInt(MAX_SPEED) + MIN_SPEED));
+                healthPotion.setVelY(-(rn.nextInt(maxSpeed) + minSpeed));
                 stage.addActor(healthPotion);
             }
 
         }
         Player.incrementLevel();
 
-        // BasicEnemy(xLocation, HEIGHT + 16, 16, 16, rn.nextInt(MAX_SPEED) + MIN_SPEED, GameObjectID.Enemy);
+        // LevelOneEnemy(xLocation, HEIGHT + 16, 16, 16, rn.nextInt(maxSpeed) + minSpeed, GameObjectID.Enemy);
+    }
+
+    /**
+     * Start spwaning spirial enemy
+     */
+    private void spiriallEnemySpwaner() {
+        int boundWidth = myRandom(50, WIDTH - SpiralEnemy.WIDTH);
+        int startXBound = myRandom(0, WIDTH - boundWidth - SpiralEnemy.WIDTH);
+        int ySpeed = myRandom(100, 801);
+        int xSpeed = myRandom(300, 1000);
+
+        SpiralEnemy spiralEnemy = Pools.obtain(SpiralEnemy.class);
+        spiralEnemy.init(20, 5, stage, startXBound, boundWidth, ySpeed, xSpeed);
+        stage.addActor(spiralEnemy);
     }
 
     public static float clamp(float var, float min, float max) {
@@ -301,22 +359,25 @@ public class MyGame extends ApplicationAdapter {
         return var;
     }
 
-
-//    private void collisionCalculation(BasicEnemy basicEnemy) {
-//
-//        if (basicEnemy.getPoly().overlaps(mainPlayer.getPoly())) {
-//            basicEnemy.setY(mainPlayer.getY() + mainPlayer.getHeight());
-//            basicEnemy.setVelY(basicEnemy.getVelY() * -6);
-//        }
-//    }
-
-
     private void updateTimerValue(float value) {
-        MAX_TIME_SPAWN_VALUE = value;
+        maxTimeSpawnValue = value;
     }
 
-    private void setMAX_SPEED(int val) {
-        MAX_SPEED = val - MIN_SPEED;
+    private void setMaxSpeed(int val) {
+        maxSpeed = val - minSpeed;
+    }
+
+
+    /**
+     * Generate random number between a range
+     *
+     * @param from This is the first number to from the range
+     * @param to   this number will not get back to the result, maximum number to be returned will be *to - 1*
+     *             So if you really want to get that number too, just put the end to *to + 1*
+     * @return
+     */
+    private int myRandom(int from, int to) {
+        return from + rn.nextInt(to - from);
     }
 }
 

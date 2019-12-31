@@ -8,7 +8,10 @@ import com.badlogic.gdx.utils.Pool;
 
 import mygame.MyGame;
 
-
+/**
+ * Mainly used as a general object for any *rectangular* objects,
+ * This will handle rendering of the object and setting up it's rectangle for the use of collisions
+ */
 public class GameObject extends Actor implements Pool.Poolable {
 
     private static ShapeRenderer renderer;

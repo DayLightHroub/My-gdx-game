@@ -3,6 +3,8 @@ package com.mygdx.game.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
+import java.util.Random;
+
 import mygame.MyGame;
 
 
@@ -14,8 +16,12 @@ public class DesktopLauncher {
         config.width = MyGame.WIDTH;
         config.height = MyGame.HEIGHT;
 
+
         new LwjglApplication(new MyGame(), config);
         //test
 //		new LwjglApplication(new MyGame(), config);
+
     }
+
+
 }

@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import mygame.objects.Player;
 
+/**
+ * The basic hud of the game, which will show the health bar, and the score.
+ */
 public class Hud {
     int x, y;
     private BitmapFont font;

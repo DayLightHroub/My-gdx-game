@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import mygame.MyGame;
 import mygame.common.KillObject;
 
+/**
+ * The extender isn't an enemy, it's a friendly item that will extend the width of the player.
+ */
 public class Extender extends GameObject {
 
     public void initiExtender() {

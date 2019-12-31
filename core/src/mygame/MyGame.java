@@ -24,6 +24,10 @@ import mygame.objects.enemies.LevelOneEnemy;
 import mygame.objects.enemies.SmartEnemy;
 import mygame.objects.enemies.SpiralEnemy;
 
+/**
+ * MyGame can be called ManagerOfGame, because it manage the environemt, spawning, level hardisty, and etc....
+ * It also define the width and height of the window
+ */
 public class MyGame extends ApplicationAdapter {
 
     public static final int WIDTH = 800, HEIGHT = 600;
@@ -71,15 +75,9 @@ public class MyGame extends ApplicationAdapter {
         processObjects.run();
         delay = MathUtils.random(minTimeSpawnValue, maxTimeSpawnValue);
 
-
-//        CircularEnemy circularEnemy = new CircularEnemy();
-//        circularEnemy.init(2, 2, stage);
-//        stage.addActor(circularEnemy);
-
-
         SmartEnemy smartEnemy = new SmartEnemy();
         smartEnemy.init(2, 2, stage);
-        smartEnemy.setX(WIDTH/2);
+        smartEnemy.setX(WIDTH / 2);
         smartEnemy.setVelY(-70);
         smartEnemy.setWidth(40);
         smartEnemy.setHeight(40);
@@ -320,7 +318,7 @@ public class MyGame extends ApplicationAdapter {
 //
 
 
-        if (spawnGreen) {
+        if (spawnGreen) {//this is a friendly level one enemey with green color and high health amount and low damage
             if (rn.nextBoolean()) {
 
 
@@ -334,7 +332,6 @@ public class MyGame extends ApplicationAdapter {
         }
         Player.incrementLevel();
 
-        // LevelOneEnemy(xLocation, HEIGHT + 16, 16, 16, rn.nextInt(maxSpeed) + minSpeed, GameObjectID.Enemy);
     }
 
     /**
@@ -372,10 +369,10 @@ public class MyGame extends ApplicationAdapter {
     /**
      * Generate random number between a range
      *
-     * @param from This is the first number to from the range
+     * @param from This is the first number from the range
      * @param to   this number will not get back to the result, maximum number to be returned will be *to - 1*
-     *             So if you really want to get that number too, just put the end to *to + 1*
-     * @return
+     *             So if you really want to get that number too, just put the to as *to + 1*
+     * @return random number ranging from @from to @to
      */
     private int myRandom(int from, int to) {
         return from + rn.nextInt(to - from);

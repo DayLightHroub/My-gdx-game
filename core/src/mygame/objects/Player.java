@@ -5,10 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import mygame.MyGame;
 
-
+/**
+ * This is the main player of the game, the main attributes of the player are:
+ * 1- it's score which will determine the level of the game
+ */
 public class Player extends GameObject {
     private float playerBounds;
-    //    private final int playerBoundsy;
     private static int animHealth;
     private static int actualHealth;
     private static int score;

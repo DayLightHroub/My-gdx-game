@@ -11,7 +11,7 @@ public class CircularEnemy extends EnemyBasics {
     private int radX = 400;
     private int radY = 400;
     private float degree = 0;
-    private int radious;
+    private int radius;
     private int speed;
 
     @Override
@@ -21,7 +21,7 @@ public class CircularEnemy extends EnemyBasics {
         setWidth(15);
         setHeight(15);
 
-        radious = 60;
+        radius = 60;
         speed = 100;
     }
 
@@ -30,8 +30,8 @@ public class CircularEnemy extends EnemyBasics {
     protected void move(float delta) {
         double rads = Math.toRadians(90 - degree);
         // Calculate the otter point of the line
-        int xPosy = Math.round((float) (radX + Math.cos(rads) * radious));
-        int yPosy = Math.round((float) (radY + Math.sin(rads) * radious));
+        int xPosy = Math.round((float) (radX + Math.cos(rads) * radius));
+        int yPosy = Math.round((float) (radY + Math.sin(rads) * radius));
 
 //        System.out.println("Radx is: " + radX);
 //        System.out.println(String.format("Math.cos(%f): ", rads) + Math.cos(rads));

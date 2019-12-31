@@ -4,6 +4,9 @@ package mygame.objects.enemies;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+/**
+ * The simplest enemy, this is the dumbest enemy that only move in one direction which is y with constant speed.
+ */
 public class LevelOneEnemy extends EnemyBasics {
 
 

@@ -3,6 +3,9 @@ package mygame.objects.enemies;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+/**
+ * It doesn't mean it's shape is circular, what it means is that the motion of the enemy is in a circluar shape
+ */
 public class CircularEnemy extends EnemyBasics {
 
     private int radX = 400;

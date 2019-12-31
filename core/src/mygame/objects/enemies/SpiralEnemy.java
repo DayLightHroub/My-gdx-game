@@ -4,9 +4,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import mygame.MyGame;
-import mygame.common.MoveRunnable;
-import mygame.objects.GameObject;
 
+/**
+ * SpiralEnemy: Is an enemy with the following behaviour:
+ * This enemy has new attributes as for leftBoundX, rightBoundX.
+ * LeftBoundX: is the left bound of the area the enemy can move on the x axis.
+ * RightBoundX: is the right bound of the area the enemy can move on the x axis.
+ * The enemy will move between the left and right boundX, once the enemy hit left bound or right bound it will reverse it vel x speed
+ * It also important to mention that the velocity in the x axis is releated to the relative x position in the distance of left and right boundX
+ * by saying that, the velocity of the x axis will be at it's maximum only if the enemey is in the middle of the distance, going away from the distance will
+ * Decrease the velocity to it's minimum value.
+ */
 public class SpiralEnemy extends EnemyBasics {
     private float leftBoundX;
     private float rightBoundX;
@@ -38,7 +46,6 @@ public class SpiralEnemy extends EnemyBasics {
 
 
         direction = 1;
-
 
 
     }

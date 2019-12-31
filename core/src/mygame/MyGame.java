@@ -80,11 +80,12 @@ public class MyGame extends ApplicationAdapter {
         SmartEnemy smartEnemy = new SmartEnemy();
         smartEnemy.init(2, 2, stage);
         smartEnemy.setX(WIDTH/2);
-        smartEnemy.setVelY(-10);
-        smartEnemy.setWidth(15);
-        smartEnemy.setHeight(15);
+        smartEnemy.setVelY(-70);
+        smartEnemy.setWidth(40);
+        smartEnemy.setHeight(40);
         smartEnemy.setY(HEIGHT - 30);
         stage.addActor(smartEnemy);
+        Player.setScore(6800);
 //        Player.setScore(6900);
 
     }

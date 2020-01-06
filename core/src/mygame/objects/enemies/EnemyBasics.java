@@ -95,5 +95,8 @@ abstract public class EnemyBasics extends GameObject {
                 move(delta);
             }
         };
+
     }
+
+
 }

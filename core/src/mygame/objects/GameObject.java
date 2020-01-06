@@ -77,7 +77,6 @@ public class GameObject extends Actor implements Pool.Poolable {
         updateRect();
     }
 
-
     @Override
     public void reset() {
 

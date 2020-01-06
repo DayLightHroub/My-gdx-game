@@ -64,7 +64,7 @@ public class SpiralEnemy extends EnemyBasics {
 
         }
 
-        //manage the velocity of x by incremnting or decremnting
+        //manage the velocity of x by incrementing or decrementing
         setVelX(currentSpeed(getX(), minXSpeed, maxXSpeed, leftBoundX, rightBoundX) * direction);
         setVelY(-1 * currentSpeed(getX(), minYSpeed, maxYSpeed, leftBoundX, rightBoundX));
     }
@@ -79,6 +79,7 @@ public class SpiralEnemy extends EnemyBasics {
      * distance, and decrease from half the distance to right bound
      *
      * @param currentPosition always between left bound and right bound.
+     * @throws IndexOutOfBoundsException will be thrown in two cases, case 1 is when minSpeed greater than maxSpeed, Case 2 when left bound is greater than right bound
      * @return
      */
     private static float currentSpeed(float currentPosition, float minSpeed, float maxSpeed, float leftBound, float rightBound) {
@@ -95,7 +96,6 @@ public class SpiralEnemy extends EnemyBasics {
             relatedPosition = halfRelatedPosition - (relatedPosition - halfRelatedPosition);
         }
         float percentage = relatedPosition / halfRelatedPosition;
-
         float speedDifferences = maxSpeed - minSpeed;
         float cSpeed = minSpeed + speedDifferences * percentage;
         return cSpeed;
